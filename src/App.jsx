@@ -9,9 +9,9 @@ function App() {
 
   return (
     <>
-    <Chatbot/>
+    {/* <Chatbot/> */}
 
-     {/* <WebSocketClient/> */}
+     <WebSocketClient/>
     </>
   )
 }

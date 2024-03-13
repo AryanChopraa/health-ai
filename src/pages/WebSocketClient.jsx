@@ -1,20 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import React, { useState, useEffect } from "react";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const WebSocketClient = () => {
   const [ws, setWs] = useState(null);
-  const [message, setMessage] = useState('');
-  const [receivedMessage, setReceivedMessage] = useState('');
+  const [message, setMessage] = useState("");
+  const [receivedMessage, setReceivedMessage] = useState("");
+  const [potentialDiagnosis, setPotentialDiagnosis] = useState("");
+  const [relatedQuestions, setRelatedQuestions] = useState([]);
 
   useEffect(() => {
-    const newWs = new WebSocket('ws://localhost:8080');
+    const newWs = new WebSocket("ws://localhost:8080");
     newWs.onopen = function () {
-      console.log('Connected to server');
+      console.log("Connected to server");
     };
 
     newWs.onmessage = function (event) {
       setReceivedMessage(event.data);
+      const responseData = JSON.parse(event.data);
+      setPotentialDiagnosis(responseData.potentialDiagnosis);
+      setRelatedQuestions(responseData.relatedQuestions);
     };
     setWs(newWs);
     return () => {
@@ -22,13 +30,11 @@ const WebSocketClient = () => {
     };
   }, []);
 
- 
-  
   const {
     transcript,
     listening,
     resetTranscript,
-    browserSupportsSpeechRecognition
+    browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
   useEffect(() => {
@@ -44,7 +50,6 @@ const WebSocketClient = () => {
     return () => {
       clearTimeout(timeoutId);
     };
-
   }, [transcript, ws]);
 
   const microphoneOn = () => {
@@ -52,9 +57,13 @@ const WebSocketClient = () => {
     toast.success("Microphone On", { autoClose: 1500 });
   };
 
+  const generateReport = () => {
+    SpeechRecognition.startListening({ continuous: true });
+    toast.success("Microphone On", { autoClose: 1500 });
+  };
+
   const microphoneOff = () => {
     SpeechRecognition.stopListening();
-    resetTranscript(); // Reset transcript after sending
     toast.error("Microphone Off", { autoClose: 1500 });
   };
 
@@ -62,18 +71,43 @@ const WebSocketClient = () => {
     return <span>Browser doesn't support speech recognition.</span>;
   }
 
-
   return (
-    <div>
-      <h1>WebSocket Client</h1>
-      <div>
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <h1 className="text-4xl font-bold text-gray-800 mb-8">
+        Doc assistant AI
+      </h1>
+      <div className="flex space-x-4">
+        <button
+          onClick={microphoneOn}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Start
+        </button>
+        <button
+          onClick={microphoneOff}
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Stop
+        </button>
+        <button
+          onClick={resetTranscript}
+          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Generate Report
+        </button>
       </div>
-      <p>Microphone: {listening ? 'on' : 'off'}</p>
-      <button onClick={microphoneOn}>Start</button>
-      <button onClick={microphoneOff}>Stop</button>
-      <button onClick={resetTranscript}>Reset</button>
-      <p>{transcript}</p>
-      <p>Received message: {receivedMessage}</p>
+      <p className="text-xl font-bold text-gray-800 mt-8">
+        Microphone: {listening ? "on" : "off"}
+      </p>
+      <p className="text-xl font-bold text-gray-800 mt-8">{transcript}</p>
+      <div className="flex flex-row gap-10">
+        <div className="flex text-xl font-bold text-gray-800 mt-8">
+          Potential Diagnosis: {potentialDiagnosis}
+        </div>
+        <div className="flex text-xl font-bold text-gray-800 mt-8">
+          Related Questionse: {relatedQuestions}
+        </div>
+      </div>
     </div>
   );
 };
