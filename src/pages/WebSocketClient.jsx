@@ -72,7 +72,7 @@ const WebSocketClient = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-start h-screen bg-gray-100 p-10">
       <h1 className="text-4xl font-bold text-gray-800 mb-8">
         Doc assistant AI
       </h1>
@@ -102,10 +102,10 @@ const WebSocketClient = () => {
       <p className="text-xl font-bold text-gray-800 mt-8">{transcript}</p>
       <div className="flex flex-row gap-10">
         <div className="flex text-xl font-bold text-gray-800 mt-8">
-          Potential Diagnosis: {potentialDiagnosis}
+          {potentialDiagnosis}
         </div>
         <div className="flex text-xl font-bold text-gray-800 mt-8">
-          Related Questionse: {relatedQuestions}
+          {relatedQuestions}
         </div>
       </div>
     </div>
