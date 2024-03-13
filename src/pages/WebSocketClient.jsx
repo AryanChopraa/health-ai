@@ -9,7 +9,6 @@ const WebSocketClient = () => {
 
   useEffect(() => {
     const newWs = new WebSocket('ws://localhost:8080');
-
     newWs.onopen = function () {
       console.log('Connected to server');
     };
@@ -17,20 +16,13 @@ const WebSocketClient = () => {
     newWs.onmessage = function (event) {
       setReceivedMessage(event.data);
     };
-
     setWs(newWs);
-
     return () => {
       newWs.close();
     };
   }, []);
 
-  const handleChange = (e) => {
-    setMessage(e.target.value);
-    if (ws) {
-      ws.send(e.target.value); // Sending the message typed in the input field
-    }
-  };
+ 
   
   const {
     transcript,
@@ -40,9 +32,19 @@ const WebSocketClient = () => {
   } = useSpeechRecognition();
 
   useEffect(() => {
+    let timeoutId;
     if (transcript && ws) {
-      ws.send(transcript); // Sending the transcript via WebSocket when it changes
+      // Clear previous timeout
+      clearTimeout(timeoutId);
+      // Set a new timeout to send the message after 1000ms of silence
+      timeoutId = setTimeout(() => {
+        ws.send(transcript);
+      }, 3000);
     }
+    return () => {
+      clearTimeout(timeoutId);
+    };
+
   }, [transcript, ws]);
 
   const microphoneOn = () => {
@@ -60,10 +62,6 @@ const WebSocketClient = () => {
     return <span>Browser doesn't support speech recognition.</span>;
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setMessage(''); // Clearing input field after submission
-  };
 
   return (
     <div>
@@ -75,6 +73,7 @@ const WebSocketClient = () => {
       <button onClick={microphoneOff}>Stop</button>
       <button onClick={resetTranscript}>Reset</button>
       <p>{transcript}</p>
+      <p>Received message: {receivedMessage}</p>
     </div>
   );
 };
