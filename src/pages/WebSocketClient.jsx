@@ -4,6 +4,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Webcam from "react-webcam";
 
 const WebSocketClient = () => {
   const [ws, setWs] = useState(null);
@@ -11,6 +12,7 @@ const WebSocketClient = () => {
   const [receivedMessage, setReceivedMessage] = useState("");
   const [potentialDiagnosis, setPotentialDiagnosis] = useState("");
   const [relatedQuestions, setRelatedQuestions] = useState([]);
+  const [cam, setCam] = useState(false);
 
   useEffect(() => {
     const newWs = new WebSocket("ws://localhost:8080");
@@ -45,7 +47,7 @@ const WebSocketClient = () => {
       // Set a new timeout to send the message after 1000ms of silence
       timeoutId = setTimeout(() => {
         ws.send(transcript);
-      }, 3000);
+      }, 2000);
     }
     return () => {
       clearTimeout(timeoutId);
@@ -53,8 +55,10 @@ const WebSocketClient = () => {
   }, [transcript, ws]);
 
   const microphoneOn = () => {
+    setCam(true);
     SpeechRecognition.startListening({ continuous: true });
     toast.success("Microphone On", { autoClose: 1500 });
+    setCam(false);
   };
 
   const generateReport = () => {
@@ -73,6 +77,10 @@ const WebSocketClient = () => {
 
   return (
     <div className="flex flex-col items-center justify-start h-screen bg-gray-100 p-10">
+      <div className="w-96">
+        <Webcam />
+      </div>
+
       <h1 className="text-4xl font-bold text-gray-800 mb-8">
         Doc assistant AI
       </h1>

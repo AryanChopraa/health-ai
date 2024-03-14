@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from "react";
 
 const Chatbot = () => {
   const messagesRef = useRef([]);
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [conversation, setConversation] = useState([]);
 
@@ -12,40 +12,48 @@ const Chatbot = () => {
       ...messagesRef.current,
       {
         role: role,
-        content: content
-      }
+        content: content,
+      },
     ];
     setConversation([...messagesRef.current]);
-  }
+  };
 
   const fetchResults = async () => {
-    const response = await fetch('http://localhost:3000/chat', {
-      method: 'POST',
+    const response = await fetch("http://localhost:3000/chat", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ messages: messagesRef.current }),
     });
     const data = await response.json();
     return data;
-  }
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
     handleMessagesArray("user", searchTerm);
+    setSearchTerm("");
     const res = await fetchResults();
-    console.log(res)
+    console.log(res);
     handleMessagesArray("assistant", res.resi);
     setLoading(false);
-    setSearchTerm('');
-  }
+    setSearchTerm("");
+  };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-gray-100 mx-24">
       <div className="flex-grow flex flex-col justify-end p-6">
         <div className="flex flex-col space-y-2">
           {conversation.map((message, index) => (
-            <div key={index} className={`rounded-lg p-2 ${message.role === 'user' ? 'bg-green-200 self-end' : 'bg-gray-200'}`}>
+            <div
+              key={index}
+              className={`rounded-lg p-2 ${
+                message.role === "user"
+                  ? "bg-green-200 self-end"
+                  : "bg-gray-200"
+              }`}
+            >
               {message.content}
             </div>
           ))}
@@ -67,7 +75,7 @@ const Chatbot = () => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Chatbot;
