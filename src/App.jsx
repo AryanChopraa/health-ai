@@ -1,7 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import Profile from "./components/profile/Profile";
-import Dashboard from "./components/dashboard/Dashboard";
-import Appointment from "./components/appointment/Appointment";
+import Homepage from "./pages/Homepage";
+// import Navbar from "./components/common/Navbar";
+import DashboardPage from "./pages/DashboardPage";
 // import WebSocketClient from "./pages/WebSocketClient";
 
 function App() {
@@ -9,9 +10,10 @@ function App() {
     <div className="w-full h-full">
       <Routes>
         {/* <WebSocketClient /> */}
+        <Route path="/" element={<Homepage />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dashboard/:doctorId" element={<Appointment />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        {/* <Route path="/dashboard/:doctorId" element={<Appointment />} /> */}
       </Routes>
     </div>
   );
