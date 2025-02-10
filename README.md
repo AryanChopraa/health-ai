@@ -1,8 +1,22 @@
-# React + Vite
+HealthChain: Centralized Health Records Platform
+About
+HealthChain is a centralized platform that allows patients to store and share their medical records with healthcare providers anywhere. The system simplifies healthcare delivery by making patient records instantly accessible to authorized medical professionals.
+Key Features
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Upload and store medical records securely
+Share records with any registered healthcare provider
+View complete medical history in one place
+Secure access control for patient privacy
+Easy-to-use interface for both patients and doctors
 
-Currently, two official plugins are available:
+Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Register as a patient or healthcare provider
+Upload or access medical records
+Manage sharing permissions
+
+Security
+
+End-to-end encryption
+Patient-controlled access
+Compliant with healthcare privacy standards
